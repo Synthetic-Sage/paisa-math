@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://paisamath.in/sitemap.xml
+Sitemap: https://synthetic-sage.github.io/paisa-math/sitemap.xml
