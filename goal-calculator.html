@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retirement & Financial Goal Calculator | PaisaMath</title>
+    <meta name="description" content="Calculate the exact monthly SIP required to reach your financial goals (retirement, child's education, house) after adjusting for inflation.">
+    <link rel="canonical" href="https://paisamath.in/goal-calculator.html">
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebApplication",
+          "name": "PaisaMath Goal Calculator",
+          "url": "https://paisamath.in/goal-calculator.html",
+          "applicationCategory": "FinanceApplication"
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Why do I need to account for inflation in goal planning?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Inflation reduces the purchasing power of money over time. A goal that costs ₹50 Lakhs today will cost much more in 10 years. Our calculator adjusts your target amount to its future cost before calculating the required SIP."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0284c7', 
+                        secondary: '#f97316', 
+                        surface: '#ffffff',
+                        background: '#f8fafc',
+                        textMain: '#1e293b',
+                        textMuted: '#64748b'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .fade-in { animation: fadeIn 0.5s ease-in-out forwards; opacity: 0; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        details > summary { list-style: none; }
+        details > summary::-webkit-details-marker { display: none; }
+    </style>
+</head>
+<body class="bg-background text-textMain font-sans antialiased">
+
+    <nav class="bg-surface border-b-2 border-secondary shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-2 text-2xl font-extrabold text-primary hover:opacity-80 transition-opacity">
+                <span class="bg-secondary text-white px-3 py-1 rounded shadow-sm">₹</span>
+                PaisaMath
+            </a>
+            <a href="index.html" class="text-textMuted hover:text-primary font-semibold transition-colors duration-300">All Tools</a>
+        </div>
+    </nav>
+
+    <main class="max-w-5xl mx-auto px-4 py-8">
+        
+        <header class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-primary mb-4 tracking-tight">Financial Goal Calculator</h1>
+            <p class="text-lg text-textMuted max-w-2xl mx-auto">Reverse-calculate the exact monthly investment required to reach your target corpus, automatically adjusted for inflation.</p>
+        </header>
+
+        <section class="bg-surface rounded-2xl shadow-xl border border-slate-200 overflow-hidden mb-12">
+            <div class="grid grid-cols-1 md:grid-cols-12">
+                
+                <div class="p-8 md:col-span-5 bg-slate-50 border-r border-slate-200">
+                    <form onsubmit="event.preventDefault(); handleCalculate();" class="space-y-6">
+                        
+                        <div>
+                            <label for="targetAmount" class="block text-sm font-semibold text-textMain mb-2">Goal Amount (Today's Value)</label>
+                            <div class="relative flex items-center group">
+                                <span class="absolute left-4 text-slate-500 font-bold">₹</span>
+                                <input type="number" id="targetAmount" required min="10000" placeholder="e.g. 10000000" 
+                                    class="w-full pl-10 pr-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-secondary focus:border-secondary outline-none transition-all duration-300 shadow-sm text-lg">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="years" class="block text-sm font-semibold text-textMain mb-2">Time to Goal (Years)</label>
+                            <div class="relative flex items-center group">
+                                <input type="number" id="years" required min="1" max="40" placeholder="e.g. 15" 
+                                    class="w-full pl-4 pr-12 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-secondary focus:border-secondary outline-none transition-all duration-300 shadow-sm text-lg">
+                                <span class="absolute right-4 text-slate-500 font-bold">Yrs</span>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="inflation" class="block text-sm font-semibold text-textMain mb-2">Expected Inflation</label>
+                                <div class="relative flex items-center group">
+                                    <input type="number" id="inflation" required min="0" step="0.1" value="6.0" 
+                                        class="w-full pl-4 pr-8 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-secondary outline-none shadow-sm text-lg">
+                                    <span class="absolute right-3 text-slate-500 font-bold">%</span>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="returns" class="block text-sm font-semibold text-textMain mb-2">Expected Returns</label>
+                                <div class="relative flex items-center group">
+                                    <input type="number" id="returns" required min="1" step="0.1" value="12.0" 
+                                        class="w-full pl-4 pr-8 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-secondary outline-none shadow-sm text-lg">
+                                    <span class="absolute right-3 text-slate-500 font-bold">%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full bg-secondary hover:bg-orange-600 text-white font-bold text-lg py-4 rounded-lg shadow-lg transition-all duration-300">
+                            <span>Calculate Required SIP</span>
+                        </button>
+                    </form>
+                </div>
+
+                <div class="p-8 md:col-span-7 bg-white relative flex flex-col justify-center items-center min-h-[400px]">
+                    <div id="emptyState" class="text-center text-slate-400 flex flex-col items-center gap-4">
+                        <svg class="w-16 h-16 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                        <p class="text-lg">Input your goal to find out how much you need to save.</p>
+                    </div>
+
+                    <div id="resultsState" class="hidden w-full h-full flex-col justify-between fade-in">
+                        
+                        <div class="text-center mb-8">
+                            <h3 class="text-sm font-bold text-secondary uppercase tracking-widest mb-1">Required Monthly SIP</h3>
+                            <div class="text-5xl font-extrabold text-textMain" id="requiredSip">₹0</div>
+                        </div>
+
+                        <!-- Chart.js Canvas -->
+                        <div class="relative w-64 h-64 mx-auto mb-8">
+                            <canvas id="goalChart"></canvas>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4 text-center border-t border-slate-100 pt-6">
+                            <div>
+                                <div class="flex items-center justify-center gap-2 mb-1">
+                                    <span class="text-xs font-semibold text-textMuted uppercase">Future Target Cost</span>
+                                </div>
+                                <div class="text-lg font-bold text-red-500" id="adjustedTarget">₹0</div>
+                                <div class="text-[10px] text-slate-400">(Adjusted for Inflation)</div>
+                            </div>
+                            <div>
+                                <div class="flex items-center justify-center gap-2 mb-1">
+                                    <span class="text-xs font-semibold text-textMuted uppercase">Total Out-of-Pocket</span>
+                                </div>
+                                <div class="text-lg font-bold text-primary" id="totalInvested">₹0</div>
+                                <div class="text-[10px] text-slate-400">(Rest is compound interest)</div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <article class="prose max-w-none text-textMain bg-white p-8 md:p-12 rounded-2xl shadow-sm border border-slate-200 mb-12">
+            <h2 class="text-3xl font-bold text-primary mb-6">Why Goal Planning Requires Inflation Adjustment</h2>
+            <p class="mb-4 text-lg">Most beginner investors make the mistake of aiming for the <em>current</em> cost of their financial goal. If a child's higher education costs ₹20 Lakhs today, saving exactly ₹20 Lakhs over 15 years will result in a massive shortfall, because the cost of education increases every year.</p>
+            
+            <h3 class="text-2xl font-bold text-primary mt-8 mb-4">How The Calculator Works</h3>
+            <p class="mb-4">Our algorithm performs two distinct calculations instantly:</p>
+            <ol class="list-decimal pl-6 space-y-2 mb-6">
+                <li><strong>Inflation Projection:</strong> We take your target amount and project its future cost using the expected inflation rate (Future Value = Present Value × (1 + inflation)^years).</li>
+                <li><strong>Reverse SIP Calculation:</strong> Once the true future target is known, we use the Future Value of Annuity formula in reverse to solve for the exact monthly SIP required to hit that inflated target, based on your expected return rate.</li>
+            </ol>
+        </article>
+    </main>
+
+    <script>
+        const formatRupee = (num) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(num);
+
+        let goalChartInstance = null;
+        
+        const drawChart = (invested, returns) => {
+            const ctx = document.getElementById('goalChart').getContext('2d');
+            if (goalChartInstance) goalChartInstance.destroy();
+            goalChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Your Investment', 'Interest Earned'],
+                    datasets: [{
+                        data: [invested, returns],
+                        backgroundColor: ['#0284c7', '#22c55e'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+        };
+
+        const handleCalculate = () => {
+            const target = parseFloat(document.getElementById('targetAmount').value);
+            const years = parseFloat(document.getElementById('years').value);
+            const inflation = parseFloat(document.getElementById('inflation').value);
+            const returns = parseFloat(document.getElementById('returns').value);
+
+            if (!target || !years) return;
+
+            // Step 1: Inflate Target
+            const inflationRate = inflation / 100;
+            const adjustedTarget = target * Math.pow(1 + inflationRate, years);
+
+            // Step 2: Reverse SIP Math
+            // FV = P × ({[1 + i]^n - 1} / i) × (1 + i)
+            // P = FV / ( ({[1 + i]^n - 1} / i) × (1 + i) )
+            const i = (returns / 12) / 100; 
+            const n = years * 12;
+            
+            let sip = 0;
+            if (i > 0) {
+                const denominator = ((Math.pow(1 + i, n) - 1) / i) * (1 + i);
+                sip = adjustedTarget / denominator;
+            } else {
+                sip = adjustedTarget / n;
+            }
+
+            const totalInvested = sip * n;
+            const interestEarned = adjustedTarget - totalInvested;
+
+            // DOM
+            document.getElementById('emptyState').classList.add('hidden');
+            document.getElementById('resultsState').classList.remove('hidden');
+            
+            document.getElementById('requiredSip').innerText = formatRupee(sip);
+            document.getElementById('adjustedTarget').innerText = formatRupee(adjustedTarget);
+            document.getElementById('totalInvested').innerText = formatRupee(totalInvested);
+
+            if (typeof Chart === 'undefined') {
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
+                script.onload = () => drawChart(totalInvested, interestEarned);
+                document.head.appendChild(script);
+            } else {
+                drawChart(totalInvested, interestEarned);
+            }
+        };
+    </script>
+</body>
+</html>

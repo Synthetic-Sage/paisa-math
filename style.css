@@ -1,0 +1,244 @@
+:root {
+    --bg-base: #f8fafc;
+    --bg-surface: #ffffff;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --accent-primary: #0284c7; /* Trust Blue */
+    --accent-secondary: #f97316; /* Saffron Orange */
+    --border-color: #e2e8f0;
+    --success: #16a34a;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-base);
+    color: var(--text-main);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+/* Navbar */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 2px solid var(--accent-secondary);
+    margin-bottom: 2rem;
+    background: var(--bg-surface);
+}
+
+nav .logo {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--accent-primary);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+nav .nav-links a {
+    color: var(--text-main);
+    text-decoration: none;
+    margin-left: 1.5rem;
+    font-weight: 600;
+}
+
+/* Hero */
+header.hero {
+    text-align: center;
+    margin-bottom: 3rem;
+    background: var(--bg-surface);
+    padding: 3rem 1rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+header.hero h1 {
+    font-size: 2.5rem;
+    color: var(--accent-primary);
+    margin-bottom: 1rem;
+}
+
+header.hero p {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+}
+
+/* Tools Grid */
+.tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.tool-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border-top: 4px solid var(--accent-primary);
+}
+
+.tool-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.tool-card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-main);
+}
+
+.tool-card p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+/* Calculator Forms */
+.calculator-container {
+    background: var(--bg-surface);
+    padding: 2rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 3rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.input-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.input-prefix {
+    background: var(--border-color);
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border-color);
+    border-right: none;
+    border-radius: 6px 0 0 6px;
+    font-weight: bold;
+}
+
+.form-group input {
+    flex: 1;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0 6px 6px 0;
+    font-size: 1rem;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+}
+
+.btn {
+    width: 100%;
+    padding: 1rem;
+    background: var(--success);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(22, 163, 74, 0.2);
+}
+
+.btn:hover {
+    background: #15803d;
+}
+
+/* Results */
+.results-panel {
+    margin-top: 2rem;
+    padding: 2rem;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 8px;
+    text-align: center;
+    display: none; /* Hidden until calculated */
+}
+
+.results-panel h2 {
+    color: var(--success);
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.results-panel .big-number {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--text-main);
+}
+
+.results-breakdown {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #bbf7d0;
+}
+
+.breakdown-item p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+.breakdown-item h4 {
+    font-size: 1.1rem;
+    color: var(--text-main);
+}
+
+/* SEO Content */
+.seo-content {
+    background: var(--bg-surface);
+    padding: 2rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.seo-content h2, .seo-content h3 {
+    color: var(--accent-primary);
+    margin-bottom: 1rem;
+    margin-top: 1.5rem;
+}
+
+.seo-content p {
+    margin-bottom: 1rem;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 2rem 0;
+    margin-top: 3rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}

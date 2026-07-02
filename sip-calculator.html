@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- ADVANCED META TAG FRAMEWORK -->
+    <title>SIP Calculator | Mutual Fund Returns | PaisaMath</title>
+    <meta name="description" content="Calculate your mutual fund returns and wealth projection with our free Systematic Investment Plan (SIP) calculator.">
+    <link rel="canonical" href="https://paisamath.in/sip-calculator.html">
+    
+    <!-- OpenGraph / Social Media Meta Tags -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://paisamath.in/sip-calculator.html">
+    <meta property="og:title" content="SIP Calculator | Mutual Fund Returns">
+    <meta property="og:description" content="Project the future value of your monthly SIP investments based on expected market returns.">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- JSON-LD STRUCTURED DATA / SCHEMA INJECTION -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebApplication",
+          "name": "PaisaMath SIP Calculator",
+          "url": "https://paisamath.in/sip-calculator.html",
+          "applicationCategory": "FinanceApplication",
+          "operatingSystem": "All",
+          "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" }
+        },
+        {
+          "@type": "FinancialProduct",
+          "name": "SIP Mutual Fund Calculator",
+          "description": "Calculates future value of systematic investment plans.",
+          "provider": { "@type": "Organization", "name": "PaisaMath" }
+        }
+      ]
+    }
+    </script>
+
+    <!-- PREMIUM UI/UX: Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0284c7', // Trust Blue
+                        secondary: '#f97316', // Saffron Orange
+                        surface: '#ffffff',
+                        background: '#f8fafc',
+                        textMain: '#1e293b',
+                        textMuted: '#64748b'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .chart-circle { transition: stroke-dasharray 1.5s ease-in-out; }
+        .fade-in { animation: fadeIn 0.5s ease-in-out forwards; opacity: 0; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        details > summary { list-style: none; }
+        details > summary::-webkit-details-marker { display: none; }
+    </style>
+</head>
+<body class="bg-background text-textMain font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="bg-surface border-b-2 border-secondary shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-2 text-2xl font-extrabold text-primary hover:opacity-80 transition-opacity">
+                <span class="bg-secondary text-white px-3 py-1 rounded shadow-sm">₹</span>
+                PaisaMath
+            </a>
+            <a href="index.html" class="text-textMuted hover:text-primary font-semibold transition-colors duration-300">All Tools</a>
+        </div>
+    </nav>
+
+    <!-- SEMANTIC HTML MAIN CONTAINER -->
+    <main class="max-w-5xl mx-auto px-4 py-8">
+        
+        <!-- TOP ADSENSE BANNER SLOT -->
+        <div class="w-full h-24 mb-8 bg-slate-100 border border-dashed border-slate-300 rounded-lg flex items-center justify-center text-slate-400 text-sm font-medium">
+            <!-- ADSENSE BANNER SLOT -->
+            Advertisement
+        </div>
+
+        <header class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-primary mb-4 tracking-tight">Mutual Fund SIP Calculator</h1>
+            <p class="text-lg text-textMuted max-w-2xl mx-auto">Project the future wealth of your monthly investments based on the power of compounding interest.</p>
+        </header>
+
+        <section class="bg-surface rounded-2xl shadow-xl border border-slate-200 overflow-hidden mb-12">
+            <div class="grid grid-cols-1 md:grid-cols-12">
+                
+                <!-- Input Area -->
+                <div class="p-8 md:col-span-5 bg-slate-50 border-r border-slate-200">
+                    <form onsubmit="event.preventDefault(); handleCalculate();" class="space-y-6">
+                        
+                        <div>
+                            <label for="monthlyInv" class="block text-sm font-semibold text-textMain mb-2">Monthly Investment</label>
+                            <div class="relative flex items-center group">
+                                <span class="absolute left-4 text-slate-500 font-bold">₹</span>
+                                <input type="number" id="monthlyInv" required min="500" placeholder="e.g. 5000" 
+                                    class="w-full pl-10 pr-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-secondary focus:border-secondary outline-none transition-all duration-300 shadow-sm text-lg">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="rate" class="block text-sm font-semibold text-textMain mb-2">Expected Return Rate (p.a)</label>
+                            <div class="relative flex items-center group">
+                                <input type="number" id="rate" required min="1" step="0.1" placeholder="e.g. 12" 
+                                    class="w-full pl-4 pr-10 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-secondary focus:border-secondary outline-none transition-all duration-300 shadow-sm text-lg">
+                                <span class="absolute right-4 text-slate-500 font-bold">%</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="tenure" class="block text-sm font-semibold text-textMain mb-2">Time Period (Years)</label>
+                            <div class="relative flex items-center group">
+                                <input type="number" id="tenure" required min="1" max="50" placeholder="e.g. 10" 
+                                    class="w-full pl-4 pr-12 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-secondary focus:border-secondary outline-none transition-all duration-300 shadow-sm text-lg">
+                                <span class="absolute right-4 text-slate-500 font-bold">Yrs</span>
+                            </div>
+                        </div>
+
+                        <button type="submit" id="calcBtn" class="w-full bg-secondary hover:bg-orange-600 text-white font-bold text-lg py-4 rounded-lg shadow-lg hover:shadow-orange-500/30 transition-all duration-300 flex justify-center items-center gap-2">
+                            <span>Calculate Returns</span>
+                            <svg id="loadingSpinner" class="hidden animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Results & Visual Data Chart Area -->
+                <div class="p-8 md:col-span-7 bg-white relative flex flex-col justify-center items-center min-h-[400px]">
+                    
+                    <div id="emptyState" class="text-center text-slate-400 flex flex-col items-center gap-4">
+                        <svg class="w-16 h-16 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                        <p class="text-lg">Enter your investment details to project your wealth.</p>
+                    </div>
+
+                    <div id="resultsState" class="hidden w-full h-full flex-col justify-between fade-in">
+                        
+                        <div class="text-center mb-8">
+                            <h3 class="text-sm font-bold text-secondary uppercase tracking-widest mb-1">Total Expected Wealth</h3>
+                            <div class="text-5xl font-extrabold text-textMain" id="fvResult">₹0</div>
+                        </div>
+
+                        <!-- Chart.js Canvas -->
+                        <div class="relative w-full h-64 mx-auto mb-8">
+                            <canvas id="sipChart"></canvas>
+                        </div>
+
+                        <!-- Breakdown Grid -->
+                        <div class="grid grid-cols-2 gap-4 text-center border-t border-slate-100 pt-6">
+                            <div>
+                                <div class="flex items-center justify-center gap-2 mb-1">
+                                    <div class="w-3 h-3 rounded-full bg-primary"></div>
+                                    <span class="text-xs font-semibold text-textMuted uppercase">Invested Amount</span>
+                                </div>
+                                <div class="text-lg font-bold text-textMain" id="displayInvested">₹0</div>
+                            </div>
+                            <div>
+                                <div class="flex items-center justify-center gap-2 mb-1">
+                                    <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                                    <span class="text-xs font-semibold text-textMuted uppercase">Est. Returns</span>
+                                </div>
+                                <div class="text-lg font-bold text-green-600" id="displayReturns">₹0</div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BELOW CALCULATOR ADSENSE SLOT -->
+        <div class="w-full max-w-3xl mx-auto h-24 mb-12 bg-slate-100 border border-dashed border-slate-300 rounded-lg flex items-center justify-center text-slate-400 text-sm font-medium">
+            <!-- ADSENSE BANNER SLOT -->
+            Advertisement
+        </div>
+
+        <!-- SEO ARTICLE STRUCTURE -->
+        <article class="prose max-w-none text-textMain bg-white p-8 md:p-12 rounded-2xl shadow-sm border border-slate-200 mb-12">
+            <h2 class="text-3xl font-bold text-primary mb-6">The Power of Systematic Investment Plans (SIP)</h2>
+            
+            <p class="mb-4 text-lg">A Systematic Investment Plan (SIP) is a facility offered by mutual funds to investors, allowing them to invest small amounts periodically (usually monthly) instead of a lump sum. In India, SIPs have become the most popular wealth-creation tool because they instill financial discipline and mitigate market volatility through Rupee Cost Averaging.</p>
+            
+            <h3 class="text-2xl font-bold text-primary mt-8 mb-4">How Does the SIP Calculator Work?</h3>
+            <p class="mb-4">Our SIP calculator uses the future value of annuity formula to project your potential wealth over time. Mutual fund investments compound over the years, meaning you earn returns not just on your principal, but also on the accumulated returns of previous years. This compounding effect creates the "magic" of long-term wealth creation.</p>
+            
+            <h3 class="text-2xl font-bold text-primary mt-8 mb-4">Understanding the Results</h3>
+            <p class="mb-4">When you calculate your SIP, our visual Doughnut Chart splits your final wealth into two categories:</p>
+            <ul class="list-disc pl-6 space-y-2 mb-6">
+                <li><strong>Invested Amount (Blue):</strong> The actual cash you deposited over the entire tenure.</li>
+                <li><strong>Estimated Returns (Green):</strong> The pure profit generated by compound interest. Notice how over long periods (15+ years), the green portion massively overtakes your invested amount.</li>
+            </ul>
+        </article>
+
+        <!-- INTERACTIVE FAQ ACCORDION -->
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold text-center text-textMain mb-8">Frequently Asked Questions</h2>
+            <div class="max-w-3xl mx-auto space-y-4">
+                
+                <details class="group bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
+                    <summary class="flex justify-between items-center font-bold cursor-pointer list-none p-6 text-lg text-textMain group-open:bg-slate-50 group-open:text-primary transition-colors">
+                        <span>Are SIP returns guaranteed?</span>
+                        <span class="transition group-open:rotate-180">
+                            <svg fill="none" height="24" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                        </span>
+                    </summary>
+                    <div class="text-textMuted p-6 pt-0 border-t border-slate-100 leading-relaxed">
+                        No. SIPs in mutual funds are subject to market risks. The expected return rate is an estimate based on historical data. Equity mutual funds historically deliver around 10-12% over the long term (7+ years), but it is not a fixed guarantee.
+                    </div>
+                </details>
+
+                <details class="group bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
+                    <summary class="flex justify-between items-center font-bold cursor-pointer list-none p-6 text-lg text-textMain group-open:bg-slate-50 group-open:text-primary transition-colors">
+                        <span>Can I pause or stop my SIP at any time?</span>
+                        <span class="transition group-open:rotate-180">
+                            <svg fill="none" height="24" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                        </span>
+                    </summary>
+                    <div class="text-textMuted p-6 pt-0 border-t border-slate-100 leading-relaxed">
+                        Yes, one of the biggest advantages of an SIP is flexibility. You can stop, pause, or increase your SIP amount at any time without paying any penalty to the Asset Management Company (AMC).
+                    </div>
+                </details>
+                
+                <details class="group bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
+                    <summary class="flex justify-between items-center font-bold cursor-pointer list-none p-6 text-lg text-textMain group-open:bg-slate-50 group-open:text-primary transition-colors">
+                        <span>What is Rupee Cost Averaging?</span>
+                        <span class="transition group-open:rotate-180">
+                            <svg fill="none" height="24" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                        </span>
+                    </summary>
+                    <div class="text-textMuted p-6 pt-0 border-t border-slate-100 leading-relaxed">
+                        Rupee Cost Averaging is an investment strategy where you buy more units when the market (NAV) is low and fewer units when the market is high. By investing a fixed amount every month via SIP, you naturally average out your purchase cost over time.
+                    </div>
+                </details>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-surface border-t border-slate-200 mt-12 py-12">
+        <div class="max-w-5xl mx-auto px-4 text-center">
+            <p class="text-textMain font-bold mb-4 text-lg">PaisaMath <span class="text-textMuted font-normal text-sm">| Built for India</span></p>
+            <div class="flex justify-center gap-6 text-sm font-semibold text-textMuted">
+                <a href="privacy.html" class="hover:text-primary transition-colors">Privacy Policy</a>
+                <a href="#" class="hover:text-primary transition-colors">Terms of Service</a>
+                <a href="#" class="hover:text-primary transition-colors">Disclaimer</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- INTERACTIVE JAVASCRIPT LOGIC -->
+    <script>
+        const formatRupee = (num) => {
+            return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(num);
+        };
+
+        const handleCalculate = () => {
+            const calcBtn = document.getElementById('calcBtn');
+            const btnText = calcBtn.querySelector('span');
+            const spinner = document.getElementById('loadingSpinner');
+            
+            btnText.innerText = "Calculating...";
+            spinner.classList.remove('hidden');
+            calcBtn.classList.add('opacity-80', 'cursor-not-allowed');
+            
+            setTimeout(() => {
+                executeMath();
+                btnText.innerText = "Calculate Returns";
+                spinner.classList.add('hidden');
+                calcBtn.classList.remove('opacity-80', 'cursor-not-allowed');
+            }, 600);
+        };
+
+        let sipChartInstance = null;
+        
+        const drawSipChart = (labels, investedData, wealthData) => {
+            const ctx = document.getElementById('sipChart').getContext('2d');
+            if (sipChartInstance) sipChartInstance.destroy();
+            sipChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Invested Amount',
+                            data: investedData,
+                            borderColor: '#0284c7',
+                            backgroundColor: 'rgba(2, 132, 199, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Total Wealth',
+                            data: wealthData,
+                            borderColor: '#22c55e',
+                            backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: { legend: { position: 'bottom' } },
+                    scales: {
+                        y: { ticks: { callback: function(value) { return '₹' + (value >= 100000 ? (value/100000).toFixed(0) + 'L' : value); } } }
+                    }
+                }
+            });
+        };
+
+        const executeMath = () => {
+            const p = parseFloat(document.getElementById('monthlyInv').value);
+            const rateYearly = parseFloat(document.getElementById('rate').value);
+            const years = parseFloat(document.getElementById('tenure').value);
+
+            if (!p || !rateYearly || !years) return;
+
+            const i = (rateYearly / 12) / 100; 
+            const n = years * 12; 
+
+            // SIP Formula: P × ({[1 + i]^n - 1} / i) × (1 + i)
+            const fv = p * ((Math.pow(1 + i, n) - 1) / i) * (1 + i);
+            const totalInvested = p * n;
+            const estimatedReturns = fv - totalInvested;
+
+            // DOM Updates
+            document.getElementById('emptyState').classList.add('hidden');
+            document.getElementById('resultsState').classList.remove('hidden');
+            
+            const resultsState = document.getElementById('resultsState');
+            resultsState.classList.remove('fade-in');
+            void resultsState.offsetWidth;
+            resultsState.classList.add('fade-in');
+
+            document.getElementById('fvResult').innerText = formatRupee(fv);
+            document.getElementById('displayInvested').innerText = formatRupee(totalInvested);
+            document.getElementById('displayReturns').innerText = formatRupee(estimatedReturns);
+            // Calculate year-by-year data for Chart
+            const labels = [];
+            const investedData = [];
+            const wealthData = [];
+            for (let y = 1; y <= years; y++) {
+                labels.push('Yr ' + y);
+                investedData.push(p * y * 12);
+                wealthData.push(p * ((Math.pow(1 + i, y * 12) - 1) / i) * (1 + i));
+            }
+            
+            // Lazy load Chart.js and draw
+            if (typeof Chart === 'undefined') {
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
+                script.onload = () => drawSipChart(labels, investedData, wealthData);
+                document.head.appendChild(script);
+            } else {
+                drawSipChart(labels, investedData, wealthData);
+            }
+        };
+    </script>
+</body>
+</html>

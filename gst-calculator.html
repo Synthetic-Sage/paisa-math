@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GST Calculator India | Inclusive & Exclusive Tax Tool | PaisaMath</title>
+    <meta name="description" content="Calculate GST (Goods and Services Tax) instantly for Indian tax slabs (5%, 12%, 18%, 28%). Free tool for businesses and consumers.">
+    <link rel="canonical" href="https://paisamath.in/gst-calculator.html">
+    
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://paisamath.in/gst-calculator.html">
+    <meta property="og:title" content="GST Calculator India | Inclusive & Exclusive">
+    <meta property="og:description" content="Calculate CGST, SGST, and total billing amounts instantly.">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebApplication",
+          "name": "PaisaMath GST Calculator",
+          "url": "https://paisamath.in/gst-calculator.html",
+          "applicationCategory": "FinanceApplication",
+          "operatingSystem": "All",
+          "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" }
+        },
+        {
+          "@type": "FinancialProduct",
+          "name": "India GST Tax Calculator",
+          "description": "Calculates Goods and Services Tax amounts for Indian businesses.",
+          "provider": { "@type": "Organization", "name": "PaisaMath" }
+        }
+      ]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0284c7', 
+                        secondary: '#f97316', 
+                        surface: '#ffffff',
+                        background: '#f8fafc',
+                        textMain: '#1e293b',
+                        textMuted: '#64748b'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .chart-circle { transition: stroke-dasharray 1s ease-in-out; }
+        .fade-in { animation: fadeIn 0.5s ease-in-out forwards; opacity: 0; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        details > summary { list-style: none; }
+        details > summary::-webkit-details-marker { display: none; }
+        
+        /* Custom radio buttons */
+        input[type="radio"]:checked + label {
+            background-color: #0284c7;
+            color: white;
+            border-color: #0284c7;
+        }
+    </style>
+</head>
+<body class="bg-background text-textMain font-sans antialiased">
+
+    <nav class="bg-surface border-b-2 border-green-500 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-2 text-2xl font-extrabold text-green-600 hover:opacity-80 transition-opacity">
+                <span class="bg-green-500 text-white px-3 py-1 rounded shadow-sm">₹</span>
+                PaisaMath
+            </a>
+            <a href="index.html" class="text-textMuted hover:text-green-600 font-semibold transition-colors duration-300">All Tools</a>
+        </div>
+    </nav>
+
+    <main class="max-w-5xl mx-auto px-4 py-8">
+        
+        <div class="w-full h-24 mb-8 bg-slate-100 border border-dashed border-slate-300 rounded-lg flex items-center justify-center text-slate-400 text-sm font-medium">
+            Advertisement
+        </div>
+
+        <header class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-green-600 mb-4 tracking-tight">GST Calculator India</h1>
+            <p class="text-lg text-textMuted max-w-2xl mx-auto">Instantly calculate inclusive and exclusive GST amounts, along with CGST and SGST splits for your billing.</p>
+        </header>
+
+        <section class="bg-surface rounded-2xl shadow-xl border border-slate-200 overflow-hidden mb-12">
+            <div class="grid grid-cols-1 md:grid-cols-12">
+                
+                <div class="p-8 md:col-span-5 bg-slate-50 border-r border-slate-200">
+                    <form onsubmit="event.preventDefault(); handleCalculate();" class="space-y-6">
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-textMain mb-3">GST Calculation Type</label>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <input type="radio" name="gstType" id="exclusive" value="exclusive" class="hidden" checked onchange="handleCalculate()">
+                                    <label for="exclusive" class="block text-center py-2 px-4 border border-slate-300 rounded-lg cursor-pointer font-medium transition-colors hover:bg-slate-100">Add GST (Exclusive)</label>
+                                </div>
+                                <div>
+                                    <input type="radio" name="gstType" id="inclusive" value="inclusive" class="hidden" onchange="handleCalculate()">
+                                    <label for="inclusive" class="block text-center py-2 px-4 border border-slate-300 rounded-lg cursor-pointer font-medium transition-colors hover:bg-slate-100">Remove GST (Inclusive)</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="amount" class="block text-sm font-semibold text-textMain mb-2">Amount</label>
+                            <div class="relative flex items-center group">
+                                <span class="absolute left-4 text-slate-500 font-bold">₹</span>
+                                <input type="number" id="amount" required min="1" placeholder="e.g. 10000" 
+                                    class="w-full pl-10 pr-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all duration-300 shadow-sm text-lg">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-textMain mb-3">GST Slab Rate (%)</label>
+                            <div class="grid grid-cols-4 gap-2">
+                                <div><input type="radio" name="rate" id="r5" value="5" class="hidden"><label for="r5" class="block text-center py-2 border border-slate-300 rounded-lg cursor-pointer font-medium">5%</label></div>
+                                <div><input type="radio" name="rate" id="r12" value="12" class="hidden"><label for="r12" class="block text-center py-2 border border-slate-300 rounded-lg cursor-pointer font-medium">12%</label></div>
+                                <div><input type="radio" name="rate" id="r18" value="18" class="hidden" checked><label for="r18" class="block text-center py-2 border border-slate-300 rounded-lg cursor-pointer font-medium">18%</label></div>
+                                <div><input type="radio" name="rate" id="r28" value="28" class="hidden"><label for="r28" class="block text-center py-2 border border-slate-300 rounded-lg cursor-pointer font-medium">28%</label></div>
+                            </div>
+                        </div>
+
+                        <button type="submit" id="calcBtn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold text-lg py-4 rounded-lg shadow-lg hover:shadow-green-500/30 transition-all duration-300 flex justify-center items-center gap-2">
+                            <span>Calculate GST</span>
+                            <svg id="loadingSpinner" class="hidden animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                        </button>
+                    </form>
+                </div>
+
+                <div class="p-8 md:col-span-7 bg-white relative flex flex-col justify-center items-center min-h-[400px]">
+                    
+                    <div id="emptyState" class="text-center text-slate-400 flex flex-col items-center gap-4">
+                        <svg class="w-16 h-16 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                        <p class="text-lg">Enter an amount to see the GST breakdown.</p>
+                    </div>
+
+                    <div id="resultsState" class="hidden w-full h-full flex-col justify-between fade-in">
+                        
+                        <div class="text-center mb-6">
+                            <h3 class="text-sm font-bold text-green-600 uppercase tracking-widest mb-1">Total Billed Amount</h3>
+                            <div class="text-5xl font-extrabold text-textMain" id="totalAmount">₹0</div>
+                        </div>
+
+                        <!-- SVG Donut Chart -->
+                        <div class="relative w-40 h-40 mx-auto mb-6">
+                            <svg viewBox="0 0 36 36" class="w-full h-full transform -rotate-90">
+                                <circle cx="18" cy="18" r="15.91549430918954" fill="transparent" stroke="#22c55e" stroke-width="4"></circle>
+                                <circle id="chartBase" class="chart-circle" cx="18" cy="18" r="15.91549430918954" fill="transparent" stroke="#0f172a" stroke-width="4" stroke-dasharray="0, 100"></circle>
+                            </svg>
+                            <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+                                <span class="text-xs font-semibold text-textMuted">Tax Added</span>
+                                <span class="text-sm font-bold text-green-600" id="chartCenterTax">₹0</span>
+                            </div>
+                        </div>
+
+                        <!-- Breakdown Grid -->
+                        <div class="grid grid-cols-3 gap-2 text-center border-t border-slate-100 pt-4">
+                            <div>
+                                <span class="block text-xs font-semibold text-textMuted uppercase mb-1">Base Amount</span>
+                                <div class="text-md font-bold text-textMain" id="baseAmount">₹0</div>
+                            </div>
+                            <div>
+                                <span class="block text-xs font-semibold text-textMuted uppercase mb-1">CGST</span>
+                                <div class="text-md font-bold text-slate-600" id="cgstAmount">₹0</div>
+                            </div>
+                            <div>
+                                <span class="block text-xs font-semibold text-textMuted uppercase mb-1">SGST</span>
+                                <div class="text-md font-bold text-slate-600" id="sgstAmount">₹0</div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="w-full max-w-3xl mx-auto h-24 mb-12 bg-slate-100 border border-dashed border-slate-300 rounded-lg flex items-center justify-center text-slate-400 text-sm font-medium">
+            Advertisement
+        </div>
+
+        <article class="prose max-w-none text-textMain bg-white p-8 md:p-12 rounded-2xl shadow-sm border border-slate-200 mb-12">
+            <h2 class="text-3xl font-bold text-green-600 mb-6">Understanding GST Calculation in India</h2>
+            <p class="mb-4 text-lg">The Goods and Services Tax (GST) is an indirect tax used in India on the supply of goods and services. It is a comprehensive, multistage, destination-based tax that has replaced many indirect taxes in India.</p>
+            
+            <h3 class="text-2xl font-bold text-green-600 mt-8 mb-4">Exclusive vs Inclusive GST</h3>
+            <ul class="list-disc pl-6 space-y-2 mb-6">
+                <li><strong>Exclusive GST (Adding GST):</strong> The product price does not include GST. Tax is calculated on top of the base price. <br><em>Formula: GST Amount = (Base Price x GST Rate) / 100</em></li>
+                <li><strong>Inclusive GST (Removing GST):</strong> The product price already includes the tax. You are calculating backwards to find the base price and the tax component. <br><em>Formula: GST Amount = Total Price - [Total Price x (100 / (100 + GST Rate))]</em></li>
+            </ul>
+            
+            <h3 class="text-2xl font-bold text-green-600 mt-8 mb-4">CGST, SGST, and IGST Explained</h3>
+            <p class="mb-4">For intra-state transactions (sales within the same state), the total GST rate is divided equally between the Central Government (CGST) and the State Government (SGST). For example, an 18% GST becomes 9% CGST and 9% SGST. For inter-state transactions, the entire tax goes to the central government as IGST.</p>
+        </article>
+
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold text-center text-textMain mb-8">Frequently Asked Questions</h2>
+            <div class="max-w-3xl mx-auto space-y-4">
+                <details class="group bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
+                    <summary class="flex justify-between items-center font-bold cursor-pointer list-none p-6 text-lg group-open:bg-slate-50 transition-colors">
+                        <span>What are the standard GST slabs in India?</span>
+                    </summary>
+                    <div class="text-textMuted p-6 pt-0 border-t border-slate-100">
+                        Goods and services are divided into five different tax slabs for collection of tax: 0%, 5%, 12%, 18% and 28%. Essential items usually fall under 0% or 5%, while luxury items are taxed at 28%.
+                    </div>
+                </details>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-surface border-t border-slate-200 mt-12 py-12">
+        <div class="max-w-5xl mx-auto px-4 text-center">
+            <p class="text-textMain font-bold mb-4 text-lg">PaisaMath <span class="text-textMuted font-normal text-sm">| Built for India</span></p>
+            <div class="flex justify-center gap-6 text-sm font-semibold text-textMuted">
+                <a href="privacy.html" class="hover:text-green-600 transition-colors">Privacy Policy</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const formatRupee = (num) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(num);
+
+        // Add listeners to radios to recalculate on change if amount exists
+        document.querySelectorAll('input[name="rate"]').forEach(radio => {
+            radio.addEventListener('change', () => {
+                if(document.getElementById('amount').value) handleCalculate(true);
+            });
+        });
+
+        const handleCalculate = (instant = false) => {
+            if(!instant) {
+                const calcBtn = document.getElementById('calcBtn');
+                const btnText = calcBtn.querySelector('span');
+                const spinner = document.getElementById('loadingSpinner');
+                
+                btnText.innerText = "Calculating...";
+                spinner.classList.remove('hidden');
+                calcBtn.classList.add('opacity-80', 'cursor-not-allowed');
+                
+                setTimeout(() => {
+                    executeMath();
+                    btnText.innerText = "Calculate GST";
+                    spinner.classList.add('hidden');
+                    calcBtn.classList.remove('opacity-80', 'cursor-not-allowed');
+                }, 400);
+            } else {
+                executeMath();
+            }
+        };
+
+        const executeMath = () => {
+            const amount = parseFloat(document.getElementById('amount').value);
+            const rate = parseFloat(document.querySelector('input[name="rate"]:checked').value);
+            const type = document.querySelector('input[name="gstType"]:checked').value;
+
+            if (!amount) return;
+
+            let base, tax, total;
+
+            if (type === 'exclusive') {
+                base = amount;
+                tax = (amount * rate) / 100;
+                total = base + tax;
+            } else {
+                total = amount;
+                base = total * (100 / (100 + rate));
+                tax = total - base;
+            }
+
+            const halfTax = tax / 2;
+
+            document.getElementById('emptyState').classList.add('hidden');
+            document.getElementById('resultsState').classList.remove('hidden');
+            
+            document.getElementById('totalAmount').innerText = formatRupee(total);
+            document.getElementById('baseAmount').innerText = formatRupee(base);
+            document.getElementById('cgstAmount').innerText = formatRupee(halfTax);
+            document.getElementById('sgstAmount').innerText = formatRupee(halfTax);
+            document.getElementById('chartCenterTax').innerText = formatRupee(tax);
+
+            const chartBase = document.getElementById('chartBase');
+            const basePercentage = (base / total) * 100;
+            
+            setTimeout(() => {
+                chartBase.style.strokeDasharray = `${basePercentage}, 100`;
+            }, 50);
+        };
+    </script>
+</body>
+</html>
